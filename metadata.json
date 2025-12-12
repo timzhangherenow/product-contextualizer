@@ -1,0 +1,5 @@
+{
+  "name": "Product Contextualizer AI",
+  "description": "Upload product photos and generate high-quality lifestyle imagery for specific global markets and scenarios using Gemini 3 Pro.",
+  "requestFramePermissions": []
+}
