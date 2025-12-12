@@ -18,8 +18,6 @@ export interface User {
 }
 
 export enum AppState {
-  CHECKING_KEY = 'CHECKING_KEY',
-  WAITING_FOR_KEY = 'WAITING_FOR_KEY',
   IDLE = 'IDLE',
   GENERATING = 'GENERATING',
   SUCCESS = 'SUCCESS',
@@ -28,7 +26,7 @@ export enum AppState {
 
 export type Language = 'zh' | 'en';
 
-// Simple interface for the translation object structure (inferred mostly, but good to have a base)
+// Simple interface for the translation object structure
 export interface Translation {
   [key: string]: any;
 }

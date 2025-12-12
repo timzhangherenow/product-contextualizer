@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { User } from '../types';
-import { userService, ADMIN_EMAIL } from '../services/userService';
+import { userService } from '../services/userService';
 
 interface LoginScreenProps {
   onLogin: (user: User) => void;
@@ -13,9 +13,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, t }) => {
   const handleGoogleLogin = () => {
     setIsLoading(true);
     setTimeout(() => {
-      // For demonstration, we log in as the admin user by default so the user can test the admin features.
-      // In a real app, this would come from the Google Auth provider.
-      const user = userService.login(ADMIN_EMAIL);
+      // Log in as a standard demo user instead of admin
+      // This creates a user if they don't exist
+      const user = userService.login('guest@herenow.ai');
       onLogin(user);
       setIsLoading(false);
     }, 1000);
@@ -33,6 +33,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, t }) => {
           <div className="mb-8">
             <span className="font-logo text-[#FF6B3D] text-6xl tracking-wide block">
               HereNow
+            </span>
+            <span className="font-brand font-bold text-slate-400 text-lg tracking-tight block mt-1">
+              {t.common.appSubtitle}
             </span>
           </div>
           
@@ -77,7 +80,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, t }) => {
                     />
                   </svg>
                 </div>
-                <span>{t.auth.loginAdmin}</span>
+                <span>{t.auth.loginButton}</span>
               </>
             )}
           </button>

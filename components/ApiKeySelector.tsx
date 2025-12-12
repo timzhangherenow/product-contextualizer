@@ -2,10 +2,11 @@ import React from 'react';
 
 interface ApiKeySelectorProps {
   onKeySelected: () => void;
+  onLogout: () => void;
   t: any;
 }
 
-export const ApiKeySelector: React.FC<ApiKeySelectorProps> = ({ onKeySelected, t }) => {
+export const ApiKeySelector: React.FC<ApiKeySelectorProps> = ({ onKeySelected, onLogout, t }) => {
   const handleSelectKey = async () => {
     if (window.aistudio && window.aistudio.openSelectKey) {
       await window.aistudio.openSelectKey();
@@ -30,12 +31,19 @@ export const ApiKeySelector: React.FC<ApiKeySelectorProps> = ({ onKeySelected, t
         
         <button
           onClick={handleSelectKey}
-          className="w-full py-4 px-6 bg-[#FF6B3D] hover:bg-[#E55A2B] text-white font-bold font-brand text-lg rounded-2xl shadow-lg shadow-orange-500/30 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+          className="w-full py-4 px-6 bg-[#FF6B3D] hover:bg-[#E55A2B] text-white font-bold font-brand text-lg rounded-2xl shadow-lg shadow-orange-500/30 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] mb-4"
         >
           {t.apiKey.button}
         </button>
 
-        <p className="mt-8 text-xs text-slate-400 font-medium">
+        <button
+          onClick={onLogout}
+          className="text-sm font-bold text-slate-400 hover:text-slate-600 transition-colors py-2 px-4 rounded-lg hover:bg-slate-100"
+        >
+          {t.apiKey.backToLogin}
+        </button>
+
+        <p className="mt-6 text-xs text-slate-400 font-medium">
           <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="hover:text-[#FF6B3D] transition-colors underline decoration-slate-300 hover:decoration-[#FF6B3D]">
             {t.apiKey.billing}
           </a>

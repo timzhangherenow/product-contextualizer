@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { UploadZone } from './components/UploadZone';
 import { Controls } from './components/Controls';
 import { ResultView } from './components/ResultView';
-import { ApiKeySelector } from './components/ApiKeySelector';
 import { LoginScreen } from './components/LoginScreen';
 import { AdminPanel } from './components/AdminPanel';
 import { generateProductContext } from './services/geminiService';
@@ -23,7 +22,7 @@ const HereNowLogo = () => (
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [appState, setAppState] = useState<AppState>(AppState.CHECKING_KEY);
+  const [appState, setAppState] = useState<AppState>(AppState.IDLE);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [config, setConfig] = useState<ProductConfig>({
     region: '',
@@ -70,28 +69,6 @@ const App: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (!user) return;
-
-    const checkKey = async () => {
-      if (window.aistudio && window.aistudio.hasSelectedApiKey) {
-        const hasKey = await window.aistudio.hasSelectedApiKey();
-        if (hasKey) {
-          setAppState(AppState.IDLE);
-        } else {
-          setAppState(AppState.WAITING_FOR_KEY);
-        }
-      } else {
-        if (process.env.API_KEY) {
-            setAppState(AppState.IDLE);
-        } else {
-            setAppState(AppState.WAITING_FOR_KEY);
-        }
-      }
-    };
-    checkKey();
-  }, [user]);
-
   const handleLogin = (newUser: User) => {
     setUser(newUser);
     localStorage.setItem('pca_user', JSON.stringify(newUser));
@@ -100,14 +77,10 @@ const App: React.FC = () => {
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem('pca_user');
-    setAppState(AppState.CHECKING_KEY);
+    setAppState(AppState.IDLE);
     setSelectedFile(null);
     setGeneratedImage(null);
     setConfig({ region: '', scenario: '', resolution: '1K' });
-  };
-
-  const handleKeySelected = () => {
-    setAppState(AppState.IDLE);
   };
 
   const handleUserUpdate = () => {
@@ -147,13 +120,8 @@ const App: React.FC = () => {
       setAppState(AppState.SUCCESS);
     } catch (error: any) {
       console.error(error);
-      if (error.message === 'API_KEY_INVALID') {
-        setAppState(AppState.WAITING_FOR_KEY);
-        setErrorMessage(t.apiKey.error);
-      } else {
-        setAppState(AppState.ERROR);
-        setErrorMessage(error.message || t.controls.generateError);
-      }
+      setAppState(AppState.ERROR);
+      setErrorMessage(error.message || t.controls.generateError);
     }
   };
 
@@ -202,10 +170,6 @@ const App: React.FC = () => {
           onUserUpdate={handleUserUpdate}
           t={t}
         />
-      )}
-
-      {(appState === AppState.WAITING_FOR_KEY || appState === AppState.CHECKING_KEY) && (
-        <ApiKeySelector onKeySelected={handleKeySelected} t={t} />
       )}
 
       {/* Glass Header */}

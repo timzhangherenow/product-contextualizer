@@ -9,15 +9,8 @@ export const translations = {
     auth: {
       welcome: "欢迎回来",
       subtitle: "登录以开始创建产品场景图。",
-      loginAdmin: "以管理员身份登录 (Tim)",
+      loginButton: "进入 HereNow",
       loginLoading: "正在登录...",
-    },
-    apiKey: {
-      title: "连接账户",
-      desc: "为了启用 Gemini 3 Pro 高清生成功能，请选择您的结算项目。",
-      button: "选择 API 密钥",
-      billing: "计费信息",
-      error: "未找到选定的 API 密钥，请重新选择。",
     },
     header: {
       adminPanel: "管理后台",
@@ -91,15 +84,8 @@ export const translations = {
     auth: {
       welcome: "Welcome Back",
       subtitle: "Login to start contextualizing your products.",
-      loginAdmin: "Login as Admin (Tim)",
+      loginButton: "Enter HereNow",
       loginLoading: "Logging in...",
-    },
-    apiKey: {
-      title: "Connect Account",
-      desc: "To enable Gemini 3 Pro high-res generation, please select your billing project.",
-      button: "Select API Key",
-      billing: "Billing Info",
-      error: "No API Key selected, please try again.",
     },
     header: {
       adminPanel: "Admin Panel",
