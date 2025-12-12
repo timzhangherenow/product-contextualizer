@@ -1,29 +1,27 @@
-# 1. 使用官方 Python 环境 (瘦身版，体积小)
-FROM python:3.9-slim
+# 1. 使用 Node.js 环境 (相当于请了个懂 TypeScript 的厨师)
+FROM node:18-alpine
 
 # 2. 设置工作目录
 WORKDIR /app
 
-# 3. ⚠️ 关键点：安装处理图片必须的系统库 (OpenCV 依赖)
-# 如果你没用到 cv2，这几行删掉也没事，但加上通常比较保险
-RUN apt-get update && apt-get install -y \
-    libgl1-mesa-glx \
-    libglib2.0-0 \
-    && rm -rf /var/lib/apt/lists/*
+# 3. 复制你的“食材清单” (package.json)
+COPY package*.json ./
 
-# 4. 复制依赖清单并安装
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# 4. 安装依赖 (按照清单买菜)
+# 如果你用的是 yarn，这里会自动识别，但在 Docker 里推荐统一用 npm install
+RUN npm install
 
-# 5. 复制所有代码
+# 5. 复制所有代码到容器里
 COPY . .
 
-# 6. 设置环境变量 (让 Python 输出直接打印到日志，方便调试)
-ENV PYTHONUNBUFFERED=1
+# 6. 打包构建 (切菜、备菜)
+# 这里会执行你 package.json 里的 "build" 命令
+RUN npm run build
+
+# 7. 暴露端口
 ENV PORT=8080
 
-# 7. 启动命令
-# 如果你用的是 Streamlit：
-# CMD ["streamlit", "run", "app.py", "--server.port=8080", "--server.address=0.0.0.0"]
-# 如果你用的是 Flask/FastAPI (假设入口文件叫 main.py)：
-CMD ["python", "main.py"]
+# 8. 启动服务 (开始营业)
+# ⚠️ 注意：这里假设你的启动命令是 "npm start"
+# 如果部署失败，很可能是因为你的启动命令不一样（详见下文）
+CMD ["npm", "start"]
