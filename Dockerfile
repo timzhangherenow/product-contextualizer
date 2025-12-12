@@ -1,27 +1,28 @@
-# 1. 使用 Node.js 环境 (相当于请了个懂 TypeScript 的厨师)
+# 1. 使用 Node.js 18 (适合你的 React 版本)
 FROM node:18-alpine
 
 # 2. 设置工作目录
 WORKDIR /app
 
-# 3. 复制你的“食材清单” (package.json)
+# 3. 复制依赖清单并安装
 COPY package*.json ./
-
-# 4. 安装依赖 (按照清单买菜)
-# 如果你用的是 yarn，这里会自动识别，但在 Docker 里推荐统一用 npm install
 RUN npm install
 
-# 5. 复制所有代码到容器里
+# 4. 复制所有代码
 COPY . .
 
-# 6. 打包构建 (切菜、备菜)
-# 这里会执行你 package.json 里的 "build" 命令
+# 5. 🟢 关键步骤：构建 (Build)
+# 这步会执行 'vite build'，把你的代码打包进 'dist' 文件夹
+# 注意：如果你的代码里有明显的 TypeScript 错误，这里可能会报错停止
 RUN npm run build
+
+# 6. 🟢 关键步骤：安装静态文件服务器
+# 因为 Vite 打包后只是文件，我们需要这个工具来'播放'它
+RUN npm install -g serve
 
 # 7. 暴露端口
 ENV PORT=8080
 
-# 8. 启动服务 (开始营业)
-# ⚠️ 注意：这里假设你的启动命令是 "npm start"
-# 如果部署失败，很可能是因为你的启动命令不一样（详见下文）
-CMD ["npm", "start"]
+# 8. 启动服务
+# 命令解释：用 serve 工具，把 dist 文件夹发布出去，监听 8080 端口
+CMD ["serve", "-s", "dist", "-l", "8080"]
